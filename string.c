@@ -2,8 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define MAX_STRING_LENGTH 2048
+
 typedef struct String {
-    char data[2048];
+    char data[MAX_STRING_LENGTH];
     int length;
 } String;
 
@@ -36,11 +38,10 @@ String* empty() {
     return self;
 }
 
-void append(String* self, char* data) {
-    int length = strlen(data);
-    if (self->length + length < 2048) {
-        strncat(self->data, data, length);
-        self->length += length;
+void append(String* self, String* data) {
+    if (self->length + data->length < 2048) {
+        strncat(self->data, data->data, data->length);
+        self->length += data->length;
     }
     else {
         fprintf(stderr, "String limit (2048) exceeded\n");
@@ -67,14 +68,14 @@ char* charptr_end(char* _str) {
 String* slice(String* self, int idx1, int idx2) {
     String* result = empty();
     for (int i = idx1; i < idx2; i++) {
-        append(result, char_end(self->data[i]));
+        append(result, string(char_end(self->data[i])));
     }
     return result;
 }
 
 String* pop(String* self, int idx) {
     String* result = empty();
-    append(result, slice(self, 0, idx)->data);
-    append(result, slice(self, idx + 1, self->length)->data);
+    append(result, slice(self, 0, idx));
+    append(result, slice(self, idx + 1, self->length));
     return result;
 }
