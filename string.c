@@ -3,6 +3,7 @@
 #include <string.h>
 
 #define MAX_STRING_LENGTH 2048
+#define at *String_at
 
 typedef struct String {
     char data[MAX_STRING_LENGTH];
@@ -26,7 +27,7 @@ void String_init(String* self, char* data) {
     }
     self->length = 0;
     self->data[0] = '\0';
-    if (!(length > 0 && length < 2048)) StringLengthError;
+    if (!(length > 0 && length < MAX_STRING_LENGTH)) StringLengthError;
     strncpy(self->data, data, length);
     self->data[length] = '\0';
     self->length = length;
@@ -46,7 +47,7 @@ String* empty() {
 
 String* plus(String* data1, String* data2) {
     String* result = data1;
-    if (!(data1->length + data2->length < 2048)) StringLengthError();
+    if (!(data1->length + data2->length < MAX_STRING_LENGTH)) StringLengthError();
     strncat(result->data, data2->data, data2->length);
     result->length += data2->length;
 }
@@ -59,9 +60,16 @@ String* mul(String* data1, int n) {
     return result;
 }
 
+/*
 char at(String* self, int idx) {
     if (idx < 0 || idx >= self->length) IndexError();
     return self->data[idx];
+}
+*/
+
+char* String_at(String* self, int idx) {
+    if (idx < 0 || idx >= self->length) IndexError();
+    return &self->data[idx];
 }
 
 char* char_end(char chr) {
