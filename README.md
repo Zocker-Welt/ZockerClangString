@@ -42,7 +42,18 @@ int main() {
     s.data[0] = 'H';
     chr = s.data[0];
 
-    free_string(&s);
+    return 0;
+}
+```
+```c
+#include "string.c"
+
+int main() {
+    // You can create a string using the str function
+    String s = str("Hello, world!");
+
+    // But you can also do it like this
+    String s2 = {"Hello, world!"};
 
     return 0;
 }
