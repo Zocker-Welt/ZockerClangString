@@ -3,6 +3,7 @@
 #include <string.h>
 
 #define at *String_at
+#define S(...) str(__VA_ARGS__)
 
 typedef struct {
     char* data;
