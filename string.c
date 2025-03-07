@@ -9,6 +9,16 @@ typedef struct String {
     int length;
 } String;
 
+void StringLengthError() {
+    fprintf(stderr, "String limit (%d) exceeded\n", MAX_STRING_LENGTH);
+    exit(1);
+}
+
+void IndexError() {
+    fprintf(stderr, "Index out of range\n");
+    exit(1);
+}
+
 void String_init(String* self, char* data) {
     int length = strlen(data);
     if (length == 0) {
@@ -16,14 +26,10 @@ void String_init(String* self, char* data) {
     }
     self->length = 0;
     self->data[0] = '\0';
-    if (length > 0 && length < 2048) {
-        strncpy(self->data, data, length);
-        self->data[length] = '\0';
-        self->length = length;
-    }
-    else {
-        fprintf(stderr, "String limit (2048) exceeded\n");
-    }
+    if (!(length > 0 && length < 2048)) StringLengthError;
+    strncpy(self->data, data, length);
+    self->data[length] = '\0';
+    self->length = length;
 }
 
 String* string(char* data) {
@@ -38,17 +44,23 @@ String* empty() {
     return self;
 }
 
-void append(String* self, String* data) {
-    if (self->length + data->length < 2048) {
-        strncat(self->data, data->data, data->length);
-        self->length += data->length;
+String* plus(String* data1, String* data2) {
+    String* result = data1;
+    if (!(data1->length + data2->length < 2048)) StringLengthError();
+    strncat(result->data, data2->data, data2->length);
+    result->length += data2->length;
+}
+
+String* mul(String* data1, int n) {
+    String* result = empty();
+    for (int i = 0; i < n; i++) {
+        result = plus(result, data1);
     }
-    else {
-        fprintf(stderr, "String limit (2048) exceeded\n");
-    }
+    return result;
 }
 
 char at(String* self, int idx) {
+    if (idx < 0 || idx >= self->length) IndexError();
     return self->data[idx];
 }
 
@@ -66,16 +78,24 @@ char* charptr_end(char* _str) {
 }
 
 String* slice(String* self, int idx1, int idx2) {
+    if (idx1 < 0 || idx1 > self->length) IndexError();
+    if (idx2 < 0 || idx2 > self->length) IndexError();
+    if (idx1 > idx2) IndexError();
     String* result = empty();
     for (int i = idx1; i < idx2; i++) {
-        append(result, string(char_end(self->data[i])));
+        result = plus(result, string(char_end(self->data[i])));
     }
     return result;
 }
 
 String* pop(String* self, int idx) {
+    if (idx < 0 || idx >= self->length) IndexError();
     String* result = empty();
-    append(result, slice(self, 0, idx));
-    append(result, slice(self, idx + 1, self->length));
+    result = plus(result, slice(self, 0, idx));
+    result = plus(result, slice(self, idx + 1, self->length));
     return result;
+}
+
+void sprint(String* data) {
+    printf("%s", data->data);
 }
