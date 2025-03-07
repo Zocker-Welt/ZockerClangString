@@ -19,10 +19,12 @@ int main() {
 ```c
 empty();                   // return: String*    arg(s): void
 string(myText);            // return: String*    arg(s): char*
-append(myStr, otherStr)    // return: void       arg(s): String*, String*
 at(myStr, idx)             // return: char       arg(s): String*, int
 slice(myStr, idx1, idx2)   // return: String*    arg(s): String*, int, int
 pop(myStr, idx)            // return: String*    arg(s): String*, int
+plus(myStr, otherStr)      // return String*     arg(s): String*, String*
+mul(myStr, myNum)          // return String*     arg(s): String*, int
+sprint(myStr)              // return: void       arg(s): String*
 ```
 
 # Attributes
