@@ -9,7 +9,7 @@ Create an empty string
 #include "string.c"
 
 int main() {
-    String* myStr = empty();
+    String s = empty();
 
     return 0;
 }
@@ -17,46 +17,32 @@ int main() {
 
 # Functions
 ```c
-empty();                   // return: String*    arg(s): void
-string(myText);            // return: String*    arg(s): char*
-at(myStr, idx)             // return: char*      arg(s): String*, int
-slice(myStr, idx1, idx2)   // return: String*    arg(s): String*, int, int
-pop(myStr, idx)            // return: String*    arg(s): String*, int
-plus(myStr, otherStr)      // return String*     arg(s): String*, String*
-mul(myStr, myNum)          // return String*     arg(s): String*, int
-sprint(myStr)              // return: void       arg(s): String*
-```
-
-# Attributes
-```c
-myStr->data                // string value
-myStr->length              // string length
+str(myText)                   // return: String      arg(s): char*
+empty()                       // return: String      arg(S): void
+concat(myStr, otherStr)       // return: String      arg(s): String, String
+slice(myStr, idx1, idx2)      // return: String      arg(s): String, size_t, size_t
+at(myStr, idx)                // return: char*       arg(s): String, int
+compare(myStr, otherStr)      // return: int         arg(s): String, String
+sprint(myStr)                 // return: void        arg(s): String
+free_string(myStr)            // return: void        arg(s): String
 ```
 
 # Notice
-maximum length is 2047
-```c
-free(myStr)                // Be a good human pls
-```
-
-# Example
-at() function
 ```c
 #include "string.c"
 
-#define String String*
-#define str string
-
 int main() {
-    String a = str("Hello!");
+    String s = str("Hello, world!");
 
-    at(a, 0) = 's'; // sello!
-    char c = at(a, 0); // s
+    // To get/set a char in a String to something you can use at
+    at(s, 0) = 'S';
+    char chr = at(s, 0);
 
-    sprint(a);
-    printf("\n%c", c);
+    // But you can also do it like this
+    s.data[0] = 'H';
+    chr = s.data[0];
 
-    free(a);
+    free_string(&s);
 
     return 0;
 }
